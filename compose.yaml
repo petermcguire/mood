@@ -1,0 +1,21 @@
+services:
+  db:
+    image: timescale/timescaledb:latest-pg16
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: mood
+    ports:
+      - '5432:5432'
+    volumes:
+      - db:/var/lib/postgresql/data
+    networks:
+      - mood-network
+volumes:
+  db:
+    driver: local
+
+networks:
+  mood-network:
+    driver: bridge
