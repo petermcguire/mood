@@ -17,10 +17,12 @@ anotherMoodDto.timestamp = '2013-03-04T22:44:30.652Z';
 
 export const oneUserDto = new UserDto();
 oneUserDto.name = 'OneUser';
+oneUserDto.password = 'pass';
 oneUserDto.moods = [oneMoodDto, anotherMoodDto];
 
 export const oneUser = new User();
 oneUser.name = oneUserDto.name;
+oneUser.password = oneUserDto.password;
 
 export const oneMood = new Mood();
 oneMood.level = oneMoodDto.level;

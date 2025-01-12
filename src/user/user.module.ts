@@ -9,5 +9,6 @@ import { Mood } from './entities/mood.entity';
   imports: [TypeOrmModule.forFeature([User, Mood])],
   controllers: [UserController],
   providers: [UserService],
+  exports: [UserService],
 })
 export class UserModule {}

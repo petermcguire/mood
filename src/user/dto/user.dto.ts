@@ -15,6 +15,9 @@ export class UserDto {
   @IsNotEmpty()
   name: string;
 
+  @IsString()
+  password: string;
+
   @ValidateNested()
   @IsArray()
   @Type(() => MoodDto)

@@ -9,6 +9,9 @@ export class User {
   @Column({ type: 'varchar', length: 30 })
   name: string;
 
+  @Column({ type: 'varchar', length: 30 })
+  password: string;
+
   @CreateDateColumn({
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',

@@ -29,8 +29,8 @@ export class UserController {
   // }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<User | null> {
-    return this.userService.findOne(+id);
+  findOneById(@Param('id') id: string): Promise<User | null> {
+    return this.userService.findOneById(+id);
   }
 
   // @Patch(':id')

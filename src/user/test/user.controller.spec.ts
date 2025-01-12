@@ -8,7 +8,8 @@ import { Mood } from '../entities/mood.entity';
 const mockUserService = {
   create: jest.fn().mockResolvedValue(oneUser),
   allMoodsForUser: jest.fn().mockResolvedValue(oneUser.moods),
-  findOne: jest.fn().mockResolvedValue(oneUser),
+  findOneById: jest.fn().mockResolvedValue(oneUser),
+  findOneByName: jest.fn().mockResolvedValue(oneUser),
   addMoods: jest.fn().mockResolvedValue(oneUser),
 };
 
@@ -59,20 +60,20 @@ describe('UserController', () => {
     });
   });
 
-  describe('findOne', () => {
+  describe('findOneById', () => {
     let result: Promise<User>;
     const id = String(oneUser.id);
 
     beforeEach(() => {
-      result = controller.findOne(id);
+      result = controller.findOneById(id);
     });
 
-    it('should call mocked service findOne once', () => {
-      expect(mockedUserService.findOne).toBeCalledTimes(1);
+    it('should call mocked service findOneById once', () => {
+      expect(mockedUserService.findOneById).toBeCalledTimes(1);
     });
 
-    it('should call mocked service findOne with expected id', () => {
-      expect(mockedUserService.findOne).toBeCalledWith(+id);
+    it('should call mocked service findOneById with expected id', () => {
+      expect(mockedUserService.findOneById).toBeCalledWith(+id);
     });
 
     it('should return expected User', () => {

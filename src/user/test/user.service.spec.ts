@@ -85,20 +85,10 @@ describe('UserService', () => {
     });
   });
 
-  // describe('findAll', () => {
-  //   it('should call properly find once and return all Users in the repo', () => {
-  //     const result = service.findAll();
-  //     // we call find once
-  //     expect(mockedUserRepo.find).toBeCalledTimes(1);
-  //     // we observe resolved response
-  //     expect(result).resolves.toEqual(allUsers);
-  //   });
-  // });
-
-  describe('findOne', () => {
+  describe('findOneById', () => {
     it('should return correct User', () => {
       const id = oneUser.id;
-      const result = service.findOne(id);
+      const result = service.findOneById(id);
       // we call find once
       expect(mockedUserRepo.findOneBy).toBeCalledTimes(1);
       expect(mockedUserRepo.findOneBy).toBeCalledWith({ id: id });
@@ -107,39 +97,17 @@ describe('UserService', () => {
     });
   });
 
-  // describe('update', () => {
-  //   let result: Promise<User>;
-  //
-  //   beforeEach(() => {
-  //     result = service.update(oneUser.id, { name: oneUser.name });
-  //   });
-  //
-  //   it('should properly call mocked save once and return created User', () => {
-  //     expect(mockedUserRepo.save).toBeCalledTimes(1);
-  //     expect(result).resolves.toEqual(oneUser);
-  //   });
-  //
-  //   it('should call save with properly built User', () => {
-  //     expect(mockedUserRepo.save).toBeCalledWith(oneUser);
-  //   });
-  // });
-
-  // describe('remove', () => {
-  //   let result: Promise<DeleteResult>;
-  //
-  //   beforeEach(() => {
-  //     result = service.remove(oneUser.id);
-  //   });
-  //
-  //   it('should properly call mocked delete once and return DeleteResult', () => {
-  //     expect(mockedUserRepo.delete).toBeCalledTimes(1);
-  //     expect(result).resolves.toEqual(deleteResult);
-  //   });
-  //
-  //   it('should call delete with appropriate id', () => {
-  //     expect(mockedUserRepo.delete).toBeCalledWith(oneUser.id);
-  //   });
-  // });
+  describe('findOneByName', () => {
+    it('should return correct User', () => {
+      const name = oneUser.name;
+      const result = service.findOneByName(name);
+      // we call find once
+      expect(mockedUserRepo.findOneBy).toBeCalledTimes(1);
+      expect(mockedUserRepo.findOneBy).toBeCalledWith({ name: name });
+      // we observe resolved response
+      expect(result).resolves.toEqual(oneUser);
+    });
+  });
 
   describe('addMoods', () => {
     let result: Promise<User>;
