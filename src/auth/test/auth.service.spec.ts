@@ -54,6 +54,12 @@ describe('AuthService', () => {
       expect(mockedUserService.findOneByName).toBeCalledTimes(1);
     });
 
+    it('should call mocked user service findOneByName with passed username', () => {
+      mockUserService.findOneByName.mockResolvedValue(oneUser);
+      result = service.validateUser(oneUser.name, oneUser.password);
+      expect(mockedUserService.findOneByName).toBeCalledWith(oneUser.name);
+    });
+
     it('should return User without password when user is found and passed in password matches user password', () => {
       const { password, ...userMinusPassword } = oneUser;
       mockUserService.findOneByName.mockResolvedValue(oneUser);
@@ -71,6 +77,29 @@ describe('AuthService', () => {
       mockUserService.findOneByName.mockResolvedValue(oneUser);
       result = service.validateUser(oneUser.name, oneUser.password + 'bad');
       expect(result).resolves.toEqual(null);
+    });
+  });
+
+  describe('login', () => {
+    let result: Promise<any>;
+
+    beforeEach(() => {
+      result = service.login(oneUser);
+    });
+
+    it('should call mocked JWT service sign once', () => {
+      expect(mockedJwtService.sign).toBeCalledTimes(1);
+    });
+
+    it('should call mocked JWT service sign with proper payload', () => {
+      expect(mockedJwtService.sign).toBeCalledWith({
+        username: oneUser.name,
+        sub: oneUser.id,
+      });
+    });
+
+    it('should return proper object', () => {
+      expect(result).resolves.toEqual({ access_token: jwtToken });
     });
   });
 });
