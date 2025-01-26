@@ -1,17 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from '../user.controller';
 import { UserService } from '../user.service';
-import { moodDtos, oneUser, oneUserDto } from './utils';
+import { mockUserService, moodDtos, oneUser, oneUserDto } from './utils';
 import { User } from '../entities/user.entity';
 import { Mood } from '../entities/mood.entity';
-
-const mockUserService = {
-  create: jest.fn().mockResolvedValue(oneUser),
-  allMoodsForUser: jest.fn().mockResolvedValue(oneUser.moods),
-  findOneById: jest.fn().mockResolvedValue(oneUser),
-  findOneByName: jest.fn().mockResolvedValue(oneUser),
-  addMoods: jest.fn().mockResolvedValue(oneUser),
-};
 
 describe('UserController', () => {
   let controller: UserController;

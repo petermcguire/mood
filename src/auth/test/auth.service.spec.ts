@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from '../auth.service';
 import { UserService } from '../../user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { jwtToken, oneUser } from './utils';
+import { jwtToken, loginReturn, oneUser } from './utils';
 
 const mockUserService = {
   findOneByName: jest.fn(),
@@ -99,7 +99,7 @@ describe('AuthService', () => {
     });
 
     it('should return proper object', () => {
-      expect(result).resolves.toEqual({ access_token: jwtToken });
+      expect(result).resolves.toEqual(loginReturn);
     });
   });
 });

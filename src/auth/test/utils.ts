@@ -6,4 +6,14 @@ oneUser.password = 'password';
 oneUser.id = 1;
 
 export const jwtToken =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImlhdCI6MTczNzg0MDc2MywiZXhwIjoxNzM3ODQwODIzfQ.XkOBNHU2DAEjIaw8XeLkvviBDcjeinZjT43YpQxjjj40;';
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.' +
+  'eyJzdWIiOjEsImlhdCI6MTczNzg0MDc2MywiZXhwIjoxNzM3ODQwODIzfQ.' +
+  'XkOBNHU2DAEjIaw8XeLkvviBDcjeinZjT43YpQxjjj40;';
+
+export const loginReturn = {
+  access_token: jwtToken,
+};
+
+export const mockAuthService = {
+  login: jest.fn().mockResolvedValue(loginReturn),
+};

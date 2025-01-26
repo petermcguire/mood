@@ -10,18 +10,10 @@ import {
   moodDtos,
   startTimestamp,
   endTimestamp,
+  mockUserServiceRepo,
+  mockMoodServiceRepo,
 } from './utils';
 import { Mood } from '../entities/mood.entity';
-
-const mockUserServiceRepo = {
-  save: jest.fn().mockResolvedValue(oneUser),
-  create: jest.fn().mockReturnValue(oneUser),
-  findOneBy: jest.fn().mockResolvedValue(oneUser),
-};
-
-const mockMoodServiceRepo = {
-  create: jest.fn().mockReturnValue(allMoods),
-};
 
 describe('UserService', () => {
   let service: UserService;

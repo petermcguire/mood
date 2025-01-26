@@ -40,5 +40,20 @@ export const allMoods = [oneMood, anotherMood];
 
 oneUser.moods = allMoods;
 
-export const deleteResult: DeleteResult = new DeleteResult();
-export const updateResult: UpdateResult = new UpdateResult();
+export const mockUserService = {
+  create: jest.fn().mockResolvedValue(oneUser),
+  allMoodsForUser: jest.fn().mockResolvedValue(oneUser.moods),
+  findOneById: jest.fn().mockResolvedValue(oneUser),
+  findOneByName: jest.fn().mockResolvedValue(oneUser),
+  addMoods: jest.fn().mockResolvedValue(oneUser),
+};
+
+export const mockUserServiceRepo = {
+  save: jest.fn().mockResolvedValue(oneUser),
+  create: jest.fn().mockReturnValue(oneUser),
+  findOneBy: jest.fn().mockResolvedValue(oneUser),
+};
+
+export const mockMoodServiceRepo = {
+  create: jest.fn().mockReturnValue(allMoods),
+};
