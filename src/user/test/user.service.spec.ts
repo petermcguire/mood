@@ -16,10 +16,7 @@ import { Mood } from '../entities/mood.entity';
 const mockUserServiceRepo = {
   save: jest.fn().mockResolvedValue(oneUser),
   create: jest.fn().mockReturnValue(oneUser),
-  // find: jest.fn().mockResolvedValue(allUsers),
   findOneBy: jest.fn().mockResolvedValue(oneUser),
-  // delete: jest.fn().mockResolvedValue(deleteResult),
-  // update: jest.fn().mockResolvedValue(updateResult),
 };
 
 const mockMoodServiceRepo = {

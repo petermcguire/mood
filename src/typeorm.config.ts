@@ -1,12 +1,12 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
-import { config as dotenvConfig } from 'dotenv';
+import { config as dotenvConfig } from '@dotenvx/dotenvx';
 import { registerAs } from '@nestjs/config';
 import { User } from './user/entities/user.entity';
 import { Mood } from './user/entities/mood.entity';
 import { Initial1731149109126 } from '../migrations/1731149109126-initial';
 import { AddPassword1736710185540 } from '../migrations/1736710185540-add_password';
 
-dotenvConfig({ path: '.env' });
+dotenvConfig();
 
 const config = {
   type: 'postgres',
