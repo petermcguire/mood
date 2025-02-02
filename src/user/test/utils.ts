@@ -1,4 +1,3 @@
-import { DeleteResult, UpdateResult } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { Mood } from '../entities/mood.entity';
 import { UserDto } from '../dto/user.dto';
