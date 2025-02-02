@@ -1,4 +1,4 @@
-import { JwtStrategy } from './jwt.strategy'; // Adjust the path if necessary
+import { JwtStrategy } from '../jwt.strategy'; // Adjust the path if necessary
 
 describe('JwtStrategy', () => {
   let jwtStrategy: JwtStrategy;
