@@ -40,11 +40,11 @@ describe('UserController', () => {
     });
 
     it('should call mocked service create once', () => {
-      expect(mockedUserService.create).toBeCalledTimes(1);
+      expect(mockedUserService.create).toHaveBeenCalledTimes(1);
     });
 
     it('should call mocked service create with expected CreateUserDto', () => {
-      expect(mockedUserService.create).toBeCalledWith(oneUserDto);
+      expect(mockedUserService.create).toHaveBeenCalledWith(oneUserDto);
     });
 
     it('should return expected User', () => {
@@ -61,11 +61,11 @@ describe('UserController', () => {
     });
 
     it('should call mocked service findOneById once', () => {
-      expect(mockedUserService.findOneById).toBeCalledTimes(1);
+      expect(mockedUserService.findOneById).toHaveBeenCalledTimes(1);
     });
 
     it('should call mocked service findOneById with expected id', () => {
-      expect(mockedUserService.findOneById).toBeCalledWith(+id);
+      expect(mockedUserService.findOneById).toHaveBeenCalledWith(+id);
     });
 
     it('should return expected User', () => {
@@ -74,7 +74,7 @@ describe('UserController', () => {
   });
 
   describe('addMoods', () => {
-    let result: Promise<User>;
+    let result: Promise<Mood[]>;
     const id = String(oneUser.id);
 
     beforeEach(() => {
@@ -82,15 +82,15 @@ describe('UserController', () => {
     });
 
     it('should call mocked service addMoods once', () => {
-      expect(mockedUserService.addMoods).toBeCalledTimes(1);
+      expect(mockedUserService.addMoods).toHaveBeenCalledTimes(1);
     });
 
     it('should call mocked service addMoods with expected id and CreateMoodDtos', () => {
-      expect(mockedUserService.addMoods).toBeCalledWith(+id, moodDtos);
+      expect(mockedUserService.addMoods).toHaveBeenCalledWith(+id, moodDtos);
     });
 
     it('should return expected User', () => {
-      expect(result).resolves.toEqual(oneUser);
+      expect(result).resolves.toEqual(oneUser.moods);
     });
   });
 
@@ -103,11 +103,11 @@ describe('UserController', () => {
     });
 
     it('should call mocked service allMoodsForUser once', () => {
-      expect(mockedUserService.allMoodsForUser).toBeCalledTimes(1);
+      expect(mockedUserService.allMoodsForUser).toHaveBeenCalledTimes(1);
     });
 
     it('should call mocked service allMoodsForUser with expected id', () => {
-      expect(mockedUserService.allMoodsForUser).toBeCalledWith(+id);
+      expect(mockedUserService.allMoodsForUser).toHaveBeenCalledWith(+id);
     });
 
     it('should return expected moods', () => {

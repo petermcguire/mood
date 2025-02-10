@@ -18,7 +18,6 @@ import { Mood } from '../entities/mood.entity';
 describe('UserService', () => {
   let service: UserService;
   let mockedUserRepo: Repository<User>;
-  let mockedMoodRepo: Repository<Mood>;
   const userRepoToken = getRepositoryToken(User);
   const moodRepoToken = getRepositoryToken(Mood);
 
@@ -39,7 +38,6 @@ describe('UserService', () => {
 
     service = module.get<UserService>(UserService);
     mockedUserRepo = module.get<Repository<User>>(userRepoToken);
-    mockedMoodRepo = module.get<Repository<Mood>>(moodRepoToken);
   });
 
   afterEach(() => {
@@ -58,15 +56,15 @@ describe('UserService', () => {
     });
 
     it('should call mocked user repo create once', () => {
-      expect(mockedUserRepo.create).toBeCalledTimes(1);
+      expect(mockedUserRepo.create).toHaveBeenCalledTimes(1);
     });
 
     it('should call mocked user repo save once', () => {
-      expect(mockedUserRepo.save).toBeCalledTimes(1);
+      expect(mockedUserRepo.save).toHaveBeenCalledTimes(1);
     });
 
     it('should call mocked user repo save with correctly built User', () => {
-      expect(mockedUserRepo.save).toBeCalledWith(oneUser);
+      expect(mockedUserRepo.save).toHaveBeenCalledWith(oneUser);
     });
 
     it('should return expected User', () => {
@@ -79,8 +77,8 @@ describe('UserService', () => {
       const id = oneUser.id;
       const result = service.findOneById(id);
       // we call find once
-      expect(mockedUserRepo.findOneBy).toBeCalledTimes(1);
-      expect(mockedUserRepo.findOneBy).toBeCalledWith({ id: id });
+      expect(mockedUserRepo.findOneBy).toHaveBeenCalledTimes(1);
+      expect(mockedUserRepo.findOneBy).toHaveBeenCalledWith({ id: id });
       // we observe resolved response
       expect(result).resolves.toEqual(oneUser);
     });
@@ -91,42 +89,64 @@ describe('UserService', () => {
       const name = oneUser.name;
       const result = service.findOneByName(name);
       // we call find once
-      expect(mockedUserRepo.findOneBy).toBeCalledTimes(1);
-      expect(mockedUserRepo.findOneBy).toBeCalledWith({ name: name });
+      expect(mockedUserRepo.findOneBy).toHaveBeenCalledTimes(1);
+      expect(mockedUserRepo.findOneBy).toHaveBeenCalledWith({ name: name });
       // we observe resolved response
       expect(result).resolves.toEqual(oneUser);
     });
   });
 
+  describe('hasUser', () => {
+    it('should call findOneById with correct id', async () => {
+      jest.spyOn(service, 'findOneById').mockResolvedValue(oneUser);
+      const result = await service.hasUser(oneUser.id);
+      // we call find once
+      expect(service.findOneById).toHaveBeenCalledTimes(1);
+      expect(service.findOneById).toHaveBeenCalledWith(oneUser.id);
+      // we observe resolved response
+      expect(result).toEqual(oneUser);
+    });
+
+    it('should throw error on user not found', () => {
+      jest.spyOn(service, 'findOneById').mockResolvedValue(null);
+      const result = service.hasUser(oneUser.id);
+      // we observe resolved response
+      expect(result).rejects.toThrow(Error('User does not exist'));
+    });
+  });
+
   describe('addMoods', () => {
-    let result: Promise<User>;
-
-    beforeEach(() => {
-      result = service.addMoods(oneUser.id, moodDtos);
+    it('should properly call mocked save once and return expected User', async () => {
+      const result = await service.addMoods(oneUser.id, moodDtos);
+      expect(mockedUserRepo.save).toHaveBeenCalledTimes(1);
+      expect(result).toEqual(oneUser.moods);
     });
 
-    it('should properly call mocked save once and return expected User', () => {
-      expect(mockedUserRepo.save).toBeCalledTimes(1);
-      expect(result).resolves.toEqual(oneUser);
-    });
-
-    it('should call save with properly built user', () => {
+    it('should call save with properly built user', async () => {
+      await service.addMoods(oneUser.id, moodDtos);
       const expectedUser = structuredClone(oneUser);
       expectedUser.moods = expectedUser.moods.concat(allMoods);
-      expect(mockedUserRepo.save).toBeCalledWith(expectedUser);
+      expect(mockedUserRepo.save).toHaveBeenCalledWith(expectedUser);
+    });
+
+    it("should throw error when user isn't found", () => {
+      jest.spyOn(service, 'findOneById').mockResolvedValue(null);
+      const result = service.addMoods(oneUser.id, moodDtos);
+      expect(result).rejects.toThrow(Error('User does not exist'));
     });
   });
 
   describe('allMoodsForUser', () => {
-    let result: Promise<Mood[]>;
-
-    beforeEach(() => {
-      result = service.allMoodsForUser(oneUser.id);
+    it('should properly call mocked findOneBy once and return expected User', async () => {
+      const result = await service.allMoodsForUser(oneUser.id);
+      expect(mockedUserRepo.findOneBy).toHaveBeenCalledTimes(1);
+      expect(result).toEqual(oneUser.moods);
     });
 
-    it('should properly call mocked findOneBy once and return expected User', () => {
-      expect(mockedUserRepo.findOneBy).toBeCalledTimes(1);
-      expect(result).resolves.toEqual(oneUser.moods);
+    it("should throw error when user isn't found", () => {
+      jest.spyOn(service, 'findOneById').mockResolvedValue(null);
+      const result = service.allMoodsForUser(oneUser.id);
+      expect(result).rejects.toThrow(Error('User does not exist'));
     });
   });
 
@@ -142,7 +162,7 @@ describe('UserService', () => {
     });
 
     it('should properly call mocked findOneBy once and return expected User', () => {
-      expect(mockedUserRepo.findOneBy).toBeCalledTimes(1);
+      expect(mockedUserRepo.findOneBy).toHaveBeenCalledTimes(1);
       expect(result).resolves.toEqual(oneUser.moods);
     });
   });
