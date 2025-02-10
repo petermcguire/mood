@@ -28,17 +28,22 @@ export class UserService {
     return this.userRepository.findOneBy({ name });
   }
 
-  async addMoods(userId: number, moodDtos: MoodDto[]): Promise<User> {
+  async hasUser(userId: number): Promise<User> {
     const hasUser = structuredClone(await this.findOneById(userId));
     if (!hasUser) throw new Error('User does not exist');
+    return hasUser;
+  }
+
+  async addMoods(userId: number, moodDtos: MoodDto[]): Promise<Mood[]> {
+    const hasUser = await this.hasUser(userId);
     const moods = this.moodRepository.create(moodDtos);
     hasUser.moods = hasUser.moods.concat(moods);
-    return this.userRepository.save(hasUser);
+    await this.userRepository.save(hasUser);
+    return moods;
   }
 
   async allMoodsForUser(userId: number): Promise<Mood[]> {
-    const hasUser = await this.findOneById(userId);
-    if (!hasUser) throw new Error('User does not exist');
+    const hasUser = await this.hasUser(userId);
     return hasUser.moods;
   }
 
@@ -47,8 +52,7 @@ export class UserService {
     startTimestamp: string,
     endTimestamp: string,
   ): Promise<Mood[]> {
-    const hasUser = await this.findOneById(userId);
-    if (!hasUser) throw new Error('User does not exist');
+    const hasUser = await this.hasUser(userId);
     return hasUser.moods;
   }
 }

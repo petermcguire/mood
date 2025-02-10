@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Patch } from "@nestjs/common";
+import { Controller, Get, Post, Body, Param, Patch } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserDto } from './dto/user.dto';
 import { User } from './entities/user.entity';
@@ -23,7 +23,7 @@ export class UserController {
   addMoods(
     @Param('id') id: string,
     @Body() addMoodDtos: MoodDto[],
-  ): Promise<User> {
+  ): Promise<Mood[]> {
     return this.userService.addMoods(+id, addMoodDtos);
   }
 

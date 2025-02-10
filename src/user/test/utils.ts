@@ -44,7 +44,7 @@ export const mockUserService = {
   allMoodsForUser: jest.fn().mockResolvedValue(oneUser.moods),
   findOneById: jest.fn().mockResolvedValue(oneUser),
   findOneByName: jest.fn().mockResolvedValue(oneUser),
-  addMoods: jest.fn().mockResolvedValue(oneUser),
+  addMoods: jest.fn().mockResolvedValue(oneUser.moods),
 };
 
 export const mockUserServiceRepo = {
