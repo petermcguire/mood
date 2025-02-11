@@ -2,8 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from '../user.controller';
 import { UserService } from '../user.service';
 import { mockUserService, moodDtos, oneUser, oneUserDto } from './utils';
-import { User } from '../entities/user.entity';
-import { Mood } from '../entities/mood.entity';
+import { UserDto } from '../dto/user.dto';
+import { MoodDto } from '../dto/mood.dto';
 
 describe('UserController', () => {
   let controller: UserController;
@@ -33,7 +33,7 @@ describe('UserController', () => {
   });
 
   describe('create', () => {
-    let result: Promise<User>;
+    let result: Promise<UserDto>;
 
     beforeEach(() => {
       result = controller.create(oneUserDto);
@@ -48,12 +48,12 @@ describe('UserController', () => {
     });
 
     it('should return expected User', () => {
-      expect(result).resolves.toEqual(oneUser);
+      expect(result).resolves.toEqual(oneUserDto);
     });
   });
 
   describe('findOneById', () => {
-    let result: Promise<User>;
+    let result: Promise<UserDto>;
     const id = String(oneUser.id);
 
     beforeEach(() => {
@@ -69,12 +69,12 @@ describe('UserController', () => {
     });
 
     it('should return expected User', () => {
-      expect(result).resolves.toEqual(oneUser);
+      expect(result).resolves.toEqual(oneUserDto);
     });
   });
 
   describe('addMoods', () => {
-    let result: Promise<Mood[]>;
+    let result: Promise<MoodDto[]>;
     const id = String(oneUser.id);
 
     beforeEach(() => {
@@ -90,12 +90,12 @@ describe('UserController', () => {
     });
 
     it('should return expected User', () => {
-      expect(result).resolves.toEqual(oneUser.moods);
+      expect(result).resolves.toEqual(oneUserDto.moods);
     });
   });
 
   describe('allMoodsForUser', () => {
-    let result: Promise<Mood[]>;
+    let result: Promise<MoodDto[]>;
     const id = String(oneUser.id);
 
     beforeEach(() => {
@@ -111,7 +111,7 @@ describe('UserController', () => {
     });
 
     it('should return expected moods', () => {
-      expect(result).resolves.toEqual(oneUser.moods);
+      expect(result).resolves.toEqual(oneUserDto.moods);
     });
   });
 });

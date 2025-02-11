@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from '../auth.service';
 import { UserService } from '../../user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { jwtToken, loginReturn, oneUser } from './utils';
+import { jwtToken, oneUser } from './utils';
 
 const mockUserService = {
   findOneByName: jest.fn(),
@@ -51,16 +51,19 @@ describe('AuthService', () => {
     it('should call mocked user service findOneByName once', () => {
       mockUserService.findOneByName.mockResolvedValue(oneUser);
       result = service.validateUser(oneUser.name, oneUser.password);
-      expect(mockedUserService.findOneByName).toBeCalledTimes(1);
+      expect(mockedUserService.findOneByName).toHaveBeenCalledTimes(1);
     });
 
     it('should call mocked user service findOneByName with passed username', () => {
       mockUserService.findOneByName.mockResolvedValue(oneUser);
       result = service.validateUser(oneUser.name, oneUser.password);
-      expect(mockedUserService.findOneByName).toBeCalledWith(oneUser.name);
+      expect(mockedUserService.findOneByName).toHaveBeenCalledWith(
+        oneUser.name,
+      );
     });
 
     it('should return User without password when user is found and passed in password matches user password', () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...userMinusPassword } = oneUser;
       mockUserService.findOneByName.mockResolvedValue(oneUser);
       result = service.validateUser(oneUser.name, oneUser.password);
@@ -81,25 +84,25 @@ describe('AuthService', () => {
   });
 
   describe('login', () => {
-    let result: Promise<any>;
+    let result: string;
 
     beforeEach(() => {
       result = service.login(oneUser);
     });
 
     it('should call mocked JWT service sign once', () => {
-      expect(mockedJwtService.sign).toBeCalledTimes(1);
+      expect(mockedJwtService.sign).toHaveBeenCalledTimes(1);
     });
 
     it('should call mocked JWT service sign with proper payload', () => {
-      expect(mockedJwtService.sign).toBeCalledWith({
+      expect(mockedJwtService.sign).toHaveBeenCalledWith({
         username: oneUser.name,
         sub: oneUser.id,
       });
     });
 
     it('should return proper object', () => {
-      expect(result).resolves.toEqual(loginReturn);
+      expect(result).toEqual(jwtToken);
     });
   });
 });

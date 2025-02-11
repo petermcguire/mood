@@ -8,11 +8,11 @@ export const endTimestamp = '2024-05-04T22:44:30.652Z';
 
 export const oneMoodDto = new MoodDto();
 oneMoodDto.level = 1;
-oneMoodDto.timestamp = '2013-02-04T22:44:30.652Z';
+oneMoodDto.timestamp = new Date('2013-02-04T22:44:30.652Z');
 
 export const anotherMoodDto = new MoodDto();
 anotherMoodDto.level = 2;
-anotherMoodDto.timestamp = '2013-03-04T22:44:30.652Z';
+anotherMoodDto.timestamp = new Date('2013-03-04T22:44:30.652Z');
 
 export const oneUserDto = new UserDto();
 oneUserDto.name = 'OneUser';
