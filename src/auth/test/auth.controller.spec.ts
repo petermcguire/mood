@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from '../auth.controller';
 import { AuthService } from '../auth.service';
-import { loginReturn, mockAuthService } from './utils';
-import { oneUser } from '../../user/test/utils';
+import { authResponse, oneUser, mockAuthService } from './utils';
+import { AuthResponseDto } from '../dto/authResponse.dto';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -32,22 +32,22 @@ describe('AuthController', () => {
   });
 
   describe('login', () => {
-    let result: Promise<any>;
+    let result: AuthResponseDto;
 
     beforeEach(() => {
       result = controller.login({ user: oneUser });
     });
 
     it('should call mocked service login once', () => {
-      expect(mockedAuthService.login).toBeCalledTimes(1);
+      expect(mockedAuthService.login).toHaveBeenCalledTimes(1);
     });
 
     it('should call mocked service login with expected User', () => {
-      expect(mockedAuthService.login).toBeCalledWith(oneUser);
+      expect(mockedAuthService.login).toHaveBeenCalledWith(oneUser);
     });
 
     it('should return expected object', () => {
-      expect(result).resolves.toEqual(loginReturn);
+      expect(result).toEqual(authResponse);
     });
   });
 });
