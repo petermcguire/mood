@@ -28,9 +28,6 @@ export class UserController {
 
   @Get(':id/moods')
   async allMoodsForUser(@Param('id') id: string): Promise<MoodDto[]> {
-    const moods = await this.userService.allMoodsForUser(+id);
-    return moods.map((mood) =>
-      plainToInstance(MoodDto, mood, { enableCircularCheck: true }),
-    );
+    return await this.userService.allMoodsForUser(+id);
   }
 }
