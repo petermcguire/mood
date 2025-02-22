@@ -83,6 +83,15 @@ describe('UserService', () => {
       // we observe resolved response
       expect(result).resolves.toEqual(oneUserDto);
     });
+
+    it('should return null if user not found', () => {
+      const id = oneUser.id;
+      jest.clearAllMocks();
+      jest.spyOn(mockedUserRepo, 'findOneBy').mockResolvedValue(null);
+      const result = service.findOneById(id);
+      // we observe resolved response
+      expect(result).resolves.toEqual(null);
+    });
   });
 
   describe('findOneByName', () => {
