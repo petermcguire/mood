@@ -10,11 +10,7 @@ export const jwtToken =
   'eyJzdWIiOjEsImlhdCI6MTczNzg0MDc2MywiZXhwIjoxNzM3ODQwODIzfQ.' +
   'XkOBNHU2DAEjIaw8XeLkvviBDcjeinZjT43YpQxjjj40;';
 
-export const mockAuthService = {
-  login: jest.fn().mockReturnValue(jwtToken),
-};
-
 export const authResponse = {
   userId: oneUser.id,
-  access_token: jwtToken,
+  accessToken: jwtToken,
 };

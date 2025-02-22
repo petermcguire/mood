@@ -4,14 +4,6 @@ import { UserService } from '../../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { jwtToken, oneUser } from './utils';
 
-const mockUserService = {
-  findOneByName: jest.fn(),
-};
-
-const mockJwtService = {
-  sign: jest.fn().mockReturnValue(jwtToken),
-};
-
 describe('AuthService', () => {
   let service: AuthService;
   let mockedUserService: UserService;
@@ -23,11 +15,15 @@ describe('AuthService', () => {
         AuthService,
         {
           provide: UserService,
-          useValue: mockUserService,
+          useValue: {
+            findOneByName: jest.fn(),
+          },
         },
         {
           provide: JwtService,
-          useValue: mockJwtService,
+          useValue: {
+            sign: jest.fn().mockReturnValue(jwtToken),
+          },
         },
       ],
     }).compile();
@@ -35,10 +31,6 @@ describe('AuthService', () => {
     service = module.get<AuthService>(AuthService);
     mockedUserService = module.get<UserService>(UserService);
     mockedJwtService = module.get<JwtService>(JwtService);
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
   });
 
   it('should be defined', () => {
@@ -49,13 +41,13 @@ describe('AuthService', () => {
     let result: Promise<any>;
 
     it('should call mocked user service findOneByName once', () => {
-      mockUserService.findOneByName.mockResolvedValue(oneUser);
+      jest.spyOn(mockedUserService, 'findOneByName').mockResolvedValue(oneUser);
       result = service.validateUser(oneUser.name, oneUser.password);
       expect(mockedUserService.findOneByName).toHaveBeenCalledTimes(1);
     });
 
     it('should call mocked user service findOneByName with passed username', () => {
-      mockUserService.findOneByName.mockResolvedValue(oneUser);
+      jest.spyOn(mockedUserService, 'findOneByName').mockResolvedValue(oneUser);
       result = service.validateUser(oneUser.name, oneUser.password);
       expect(mockedUserService.findOneByName).toHaveBeenCalledWith(
         oneUser.name,
@@ -65,19 +57,19 @@ describe('AuthService', () => {
     it('should return User without password when user is found and passed in password matches user password', () => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...userMinusPassword } = oneUser;
-      mockUserService.findOneByName.mockResolvedValue(oneUser);
+      jest.spyOn(mockedUserService, 'findOneByName').mockResolvedValue(oneUser);
       result = service.validateUser(oneUser.name, oneUser.password);
       expect(result).resolves.toEqual(userMinusPassword);
     });
 
     it('should return null when user is not found', () => {
-      mockUserService.findOneByName.mockResolvedValue(null);
+      jest.spyOn(mockedUserService, 'findOneByName').mockResolvedValue(null);
       result = service.validateUser(oneUser.name, oneUser.password);
       expect(result).resolves.toEqual(null);
     });
 
     it('should return null when user is found but password dopes not match', () => {
-      mockUserService.findOneByName.mockResolvedValue(oneUser);
+      jest.spyOn(mockedUserService, 'findOneByName').mockResolvedValue(oneUser);
       result = service.validateUser(oneUser.name, oneUser.password + 'bad');
       expect(result).resolves.toEqual(null);
     });

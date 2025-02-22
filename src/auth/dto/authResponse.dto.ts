@@ -10,5 +10,5 @@ export class AuthResponseDto {
 
   @Expose()
   @IsString()
-  access_token: string;
+  accessToken: string;
 }

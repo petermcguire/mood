@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from '../auth.controller';
 import { AuthService } from '../auth.service';
-import { authResponse, oneUser, mockAuthService } from './utils';
+import { authResponse, oneUser, jwtToken } from './utils';
 import { AuthResponseDto } from '../dto/authResponse.dto';
 
 describe('AuthController', () => {
@@ -14,17 +14,15 @@ describe('AuthController', () => {
       providers: [
         {
           provide: AuthService,
-          useValue: mockAuthService,
+          useValue: {
+            login: jest.fn().mockReturnValue(jwtToken),
+          },
         },
       ],
     }).compile();
 
     controller = module.get<AuthController>(AuthController);
     mockedAuthService = module.get<AuthService>(AuthService);
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
   });
 
   it('should be defined', () => {
