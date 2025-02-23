@@ -14,7 +14,7 @@ export class AuthController {
   login(@Request() req): AuthResponseDto {
     const response = new AuthResponseDto();
     response.userId = req.user.id;
-    response.access_token = this.authService.login(req.user);
+    response.accessToken = this.authService.login(req.user);
     return response;
   }
 }

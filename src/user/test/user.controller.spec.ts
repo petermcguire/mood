@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from '../user.controller';
 import { UserService } from '../user.service';
-import { mockUserService, moodDtos, oneUser, oneUserDto } from './utils';
+import { moodDtos, oneUser, oneUserDto } from './utils';
 import { UserDto } from '../dto/user.dto';
 import { MoodDto } from '../dto/mood.dto';
 
@@ -15,17 +15,19 @@ describe('UserController', () => {
       providers: [
         {
           provide: UserService,
-          useValue: mockUserService,
+          useValue: {
+            create: jest.fn().mockResolvedValue(oneUserDto),
+            allMoodsForUser: jest.fn().mockResolvedValue(oneUserDto.moods),
+            findOneById: jest.fn().mockResolvedValue(oneUserDto),
+            findOneByName: jest.fn().mockResolvedValue(oneUserDto),
+            addMoods: jest.fn().mockResolvedValue(moodDtos),
+          },
         },
       ],
     }).compile();
 
     controller = module.get<UserController>(UserController);
     mockedUserService = module.get<UserService>(UserService);
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
   });
 
   it('should be defined', () => {

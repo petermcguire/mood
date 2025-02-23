@@ -26,12 +26,12 @@ oneUser.password = oneUserDto.password;
 export const oneMood = new Mood();
 oneMood.level = oneMoodDto.level;
 oneMood.user = oneUser;
-oneMood.timestamp = new Date(oneMoodDto.timestamp);
+oneMood.timestamp = oneMoodDto.timestamp;
 
 export const anotherMood = new Mood();
 anotherMood.level = anotherMoodDto.level;
 anotherMood.user = oneUser;
-anotherMood.timestamp = new Date(anotherMoodDto.timestamp);
+anotherMood.timestamp = anotherMoodDto.timestamp;
 
 export const moodDtos = [oneMoodDto, anotherMoodDto];
 
