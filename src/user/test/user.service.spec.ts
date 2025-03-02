@@ -51,11 +51,11 @@ describe('UserService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('create', () => {
+  describe('createUser', () => {
     let result: Promise<UserDto>;
 
     beforeEach(() => {
-      result = service.create(oneUserDto);
+      result = service.createUser(oneUserDto);
     });
 
     it('should call mocked user repo save once with proper user', () => {
