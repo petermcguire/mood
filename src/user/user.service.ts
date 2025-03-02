@@ -6,8 +6,11 @@ import { Mood } from './entities/mood.entity';
 import { UserDto } from './dto/user.dto';
 import { MoodDto } from './dto/mood.dto';
 import { plainToInstance } from 'class-transformer';
+import * as bcrypt from 'bcrypt';
 
 export const userDoesNotExistError = new Error('User does not exist');
+
+export const SALT_ROUNDS = 10;
 
 @Injectable()
 export class UserService {
@@ -18,8 +21,10 @@ export class UserService {
     private readonly moodRepository: Repository<Mood>,
   ) {}
 
-  async create(userDto: UserDto): Promise<UserDto> {
-    const createdUser = this.userRepository.create(userDto);
+  async createUser(userDto: UserDto): Promise<UserDto> {
+    const password = await bcrypt.hash(userDto.password, SALT_ROUNDS);
+    const encryptUserDto = { ...userDto, password };
+    const createdUser = this.userRepository.create(encryptUserDto);
     const user = await this.userRepository.save(createdUser);
     return plainToInstance(UserDto, user, { enableCircularCheck: true });
   }

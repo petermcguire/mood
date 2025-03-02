@@ -2,15 +2,16 @@ import { Controller, Get, Post, Body, Param, Patch } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserDto } from './dto/user.dto';
 import { MoodDto } from './dto/mood.dto';
-import { plainToInstance } from 'class-transformer';
+import { Public } from '../auth/constants';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Public()
   @Post()
-  async create(@Body() userDto: UserDto): Promise<UserDto> {
-    return await this.userService.create(userDto);
+  async createUser(@Body() userDto: UserDto): Promise<UserDto> {
+    return await this.userService.createUser(userDto);
   }
 
   @Get(':id')

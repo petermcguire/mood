@@ -34,19 +34,19 @@ describe('UserController', () => {
     expect(controller).toBeDefined();
   });
 
-  describe('create', () => {
+  describe('createUser', () => {
     let result: Promise<UserDto>;
 
     beforeEach(() => {
-      result = controller.create(oneUserDto);
+      result = controller.createUser(oneUserDto);
     });
 
     it('should call mocked service create once', () => {
-      expect(mockedUserService.create).toHaveBeenCalledTimes(1);
+      expect(mockedUserService.createUser).toHaveBeenCalledTimes(1);
     });
 
     it('should call mocked service create with expected CreateUserDto', () => {
-      expect(mockedUserService.create).toHaveBeenCalledWith(oneUserDto);
+      expect(mockedUserService.createUser).toHaveBeenCalledWith(oneUserDto);
     });
 
     it('should return expected User', () => {
