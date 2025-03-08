@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import typeorm from './typeorm.config';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import { JwtStrategy } from './auth/jwt.strategy';
 
 @Module({
   imports: [
@@ -31,9 +32,9 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard';
     AppService,
     {
       provide: APP_GUARD,
-      useExisting: JwtAuthGuard,
+      useClass: JwtAuthGuard,
     },
-    JwtAuthGuard,
+    JwtStrategy,
   ],
 })
 export class AppModule {}
