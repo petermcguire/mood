@@ -16,7 +16,7 @@ describe('UserController', () => {
         {
           provide: UserService,
           useValue: {
-            create: jest.fn().mockResolvedValue(oneUserDto),
+            createUser: jest.fn().mockResolvedValue(oneUserDto),
             allMoodsForUser: jest.fn().mockResolvedValue(oneUserDto.moods),
             findOneById: jest.fn().mockResolvedValue(oneUserDto),
             findOneByName: jest.fn().mockResolvedValue(oneUserDto),
@@ -35,10 +35,10 @@ describe('UserController', () => {
   });
 
   describe('createUser', () => {
-    let result: Promise<UserDto>;
+    let result: UserDto;
 
-    beforeEach(() => {
-      result = controller.createUser(oneUserDto);
+    beforeEach(async () => {
+      result = await controller.createUser(oneUserDto);
     });
 
     it('should call mocked service create once', () => {
@@ -50,16 +50,16 @@ describe('UserController', () => {
     });
 
     it('should return expected User', () => {
-      expect(result).resolves.toEqual(oneUserDto);
+      expect(result).toEqual(oneUserDto);
     });
   });
 
   describe('findOneById', () => {
-    let result: Promise<UserDto>;
+    let result: UserDto;
     const id = String(oneUser.id);
 
-    beforeEach(() => {
-      result = controller.findOneById(id);
+    beforeEach(async () => {
+      result = await controller.findOneById(id);
     });
 
     it('should call mocked service findOneById once', () => {
@@ -71,16 +71,16 @@ describe('UserController', () => {
     });
 
     it('should return expected User', () => {
-      expect(result).resolves.toEqual(oneUserDto);
+      expect(result).toEqual(oneUserDto);
     });
   });
 
   describe('addMoods', () => {
-    let result: Promise<MoodDto[]>;
+    let result: MoodDto[];
     const id = String(oneUser.id);
 
-    beforeEach(() => {
-      result = controller.addMoods(id, moodDtos);
+    beforeEach(async () => {
+      result = await controller.addMoods(id, moodDtos);
     });
 
     it('should call mocked service addMoods once', () => {
@@ -92,16 +92,16 @@ describe('UserController', () => {
     });
 
     it('should return expected User', () => {
-      expect(result).resolves.toEqual(oneUserDto.moods);
+      expect(result).toEqual(oneUserDto.moods);
     });
   });
 
   describe('allMoodsForUser', () => {
-    let result: Promise<MoodDto[]>;
+    let result: MoodDto[];
     const id = String(oneUser.id);
 
-    beforeEach(() => {
-      result = controller.allMoodsForUser(id);
+    beforeEach(async () => {
+      result = await controller.allMoodsForUser(id);
     });
 
     it('should call mocked service allMoodsForUser once', () => {
@@ -113,7 +113,7 @@ describe('UserController', () => {
     });
 
     it('should return expected moods', () => {
-      expect(result).resolves.toEqual(oneUserDto.moods);
+      expect(result).toEqual(oneUserDto.moods);
     });
   });
 });

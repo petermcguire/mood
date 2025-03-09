@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { userDoesNotExistError, UserService } from '../user.service';
+import { SALT_ROUNDS, userDoesNotExistError, UserService } from '../user.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from '../entities/user.entity';
 import { Repository } from 'typeorm';
@@ -13,6 +13,7 @@ import {
 } from './utils';
 import { Mood } from '../entities/mood.entity';
 import { UserDto } from '../dto/user.dto';
+import * as bcrypt from 'bcrypt';
 
 describe('UserService', () => {
   let service: UserService;
@@ -52,10 +53,19 @@ describe('UserService', () => {
   });
 
   describe('createUser', () => {
-    let result: Promise<UserDto>;
+    let result: UserDto;
+    let bcryptSpy: jest.SpyInstance;
 
-    beforeEach(() => {
-      result = service.createUser(oneUserDto);
+    beforeEach(async () => {
+      bcryptSpy = jest
+        .spyOn(bcrypt, 'hash')
+        .mockImplementation(() => Promise.resolve('pass'));
+      result = await service.createUser(oneUserDto);
+    });
+
+    it('should call bcrypt hash with proper args', () => {
+      expect(bcryptSpy).toHaveBeenCalledTimes(1);
+      expect(bcryptSpy).toHaveBeenCalledWith(oneUserDto.password, SALT_ROUNDS);
     });
 
     it('should call mocked user repo save once with proper user', () => {
@@ -69,40 +79,40 @@ describe('UserService', () => {
     });
 
     it('should return expected User', () => {
-      expect(result).resolves.toEqual(oneUserDto);
+      expect(result).toEqual(oneUserDto);
     });
   });
 
   describe('findOneById', () => {
-    it('should return correct User', () => {
+    it('should return correct User', async () => {
       const id = oneUser.id;
-      const result = service.findOneById(id);
+      const result = await service.findOneById(id);
       // we call find once
       expect(mockedUserRepo.findOneBy).toHaveBeenCalledTimes(1);
       expect(mockedUserRepo.findOneBy).toHaveBeenCalledWith({ id: id });
       // we observe resolved response
-      expect(result).resolves.toEqual(oneUserDto);
+      expect(result).toEqual(oneUserDto);
     });
 
-    it('should return null if user not found', () => {
+    it('should return null if user not found', async () => {
       const id = oneUser.id;
       jest.clearAllMocks();
       jest.spyOn(mockedUserRepo, 'findOneBy').mockResolvedValue(null);
-      const result = service.findOneById(id);
+      const result = await service.findOneById(id);
       // we observe resolved response
-      expect(result).resolves.toEqual(null);
+      expect(result).toEqual(null);
     });
   });
 
   describe('findOneByName', () => {
-    it('should return correct User', () => {
+    it('should return correct User', async () => {
       const name = oneUser.name;
-      const result = service.findOneByName(name);
+      const result = await service.findOneByName(name);
       // we call find once
       expect(mockedUserRepo.findOneBy).toHaveBeenCalledTimes(1);
       expect(mockedUserRepo.findOneBy).toHaveBeenCalledWith({ name: name });
       // we observe resolved response
-      expect(result).resolves.toEqual(oneUser);
+      expect(result).toEqual(oneUser);
     });
   });
 
