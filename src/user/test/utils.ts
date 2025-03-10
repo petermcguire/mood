@@ -2,17 +2,24 @@ import { User } from '../entities/user.entity';
 import { Mood } from '../entities/mood.entity';
 import { UserDto } from '../dto/user.dto';
 import { MoodDto } from '../dto/mood.dto';
+import { AllMoodsForUserQueryRangeDto } from '../dto/all-moods-for-user-query-range.dto';
 
 export const startTimestamp = '2024-02-04T22:44:30.652Z';
+export const betweenTimestamp = '2024-03-10T22:44:30.652Z';
 export const endTimestamp = '2024-05-04T22:44:30.652Z';
+export const outsideTimestamp = '2024-05-10T22:44:30.652Z';
+
+export const queryRange = new AllMoodsForUserQueryRangeDto();
+queryRange.start = new Date(startTimestamp);
+queryRange.end = new Date(endTimestamp);
 
 export const oneMoodDto = new MoodDto();
 oneMoodDto.level = 1;
-oneMoodDto.timestamp = new Date('2013-02-04T22:44:30.652Z');
+oneMoodDto.timestamp = new Date(betweenTimestamp);
 
 export const anotherMoodDto = new MoodDto();
 anotherMoodDto.level = 2;
-anotherMoodDto.timestamp = new Date('2013-03-04T22:44:30.652Z');
+anotherMoodDto.timestamp = new Date(outsideTimestamp);
 
 export const oneUserDto = new UserDto();
 oneUserDto.name = 'OneUser';

@@ -1,9 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from '../user.controller';
 import { UserService } from '../user.service';
-import { moodDtos, oneUser, oneUserDto } from './utils';
+import { moodDtos, oneUser, oneUserDto, queryRange } from './utils';
 import { UserDto } from '../dto/user.dto';
 import { MoodDto } from '../dto/mood.dto';
+import { AllMoodsForUserQueryRangeDto } from '../dto/all-moods-for-user-query-range.dto';
 
 describe('UserController', () => {
   let controller: UserController;
@@ -18,6 +19,9 @@ describe('UserController', () => {
           useValue: {
             createUser: jest.fn().mockResolvedValue(oneUserDto),
             allMoodsForUser: jest.fn().mockResolvedValue(oneUserDto.moods),
+            allMoodsForUserInRange: jest
+              .fn()
+              .mockResolvedValue(oneUserDto.moods),
             findOneById: jest.fn().mockResolvedValue(oneUserDto),
             findOneByName: jest.fn().mockResolvedValue(oneUserDto),
             addMoods: jest.fn().mockResolvedValue(moodDtos),
@@ -100,20 +104,43 @@ describe('UserController', () => {
     let result: MoodDto[];
     const id = String(oneUser.id);
 
-    beforeEach(async () => {
-      result = await controller.allMoodsForUser(id);
+    describe('without query range', () => {
+      beforeEach(async () => {
+        result = await controller.allMoodsForUser(id);
+      });
+
+      it('should call mocked service allMoodsForUser once with id', async () => {
+        expect(mockedUserService.allMoodsForUser).toHaveBeenCalledTimes(1);
+        expect(mockedUserService.allMoodsForUser).toHaveBeenCalledWith(+id);
+      });
+
+      it('should return expected moods', () => {
+        expect(result).toEqual(oneUserDto.moods);
+      });
     });
 
-    it('should call mocked service allMoodsForUser once', () => {
-      expect(mockedUserService.allMoodsForUser).toHaveBeenCalledTimes(1);
-    });
+    describe('with query range', () => {
+      it('should call allMoodsForUserInRange once with id and query range and return result', async () => {
+        const result = await controller.allMoodsForUser(id, queryRange);
+        expect(mockedUserService.allMoodsForUserInRange).toHaveBeenCalledTimes(
+          1,
+        );
+        expect(mockedUserService.allMoodsForUserInRange).toHaveBeenCalledWith(
+          +id,
+          queryRange,
+        );
+        expect(result).toEqual(oneUserDto.moods);
+      });
 
-    it('should call mocked service allMoodsForUser with expected id', () => {
-      expect(mockedUserService.allMoodsForUser).toHaveBeenCalledWith(+id);
-    });
-
-    it('should return expected moods', () => {
-      expect(result).toEqual(oneUserDto.moods);
+      it('should call allMoodsForUser once with id and return result', async () => {
+        const result = await controller.allMoodsForUser(
+          id,
+          new AllMoodsForUserQueryRangeDto(),
+        );
+        expect(mockedUserService.allMoodsForUser).toHaveBeenCalledTimes(1);
+        expect(mockedUserService.allMoodsForUser).toHaveBeenCalledWith(+id);
+        expect(result).toEqual(oneUserDto.moods);
+      });
     });
   });
 });

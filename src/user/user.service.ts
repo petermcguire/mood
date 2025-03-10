@@ -7,6 +7,7 @@ import { UserDto } from './dto/user.dto';
 import { MoodDto } from './dto/mood.dto';
 import { plainToInstance } from 'class-transformer';
 import * as bcrypt from 'bcrypt';
+import { AllMoodsForUserQueryRangeDto } from './dto/all-moods-for-user-query-range.dto';
 
 export const userDoesNotExistError = new Error('User does not exist');
 
@@ -41,14 +42,14 @@ export class UserService {
   }
 
   async hasUser(id: number): Promise<User> {
-    const hasUser = structuredClone(
-      await this.userRepository.findOneBy({ id }),
-    );
+    const hasUser = await this.userRepository.findOneBy({ id });
     if (!hasUser) throw userDoesNotExistError;
     return hasUser;
   }
 
   async addMoods(userId: number, moodDtos: MoodDto[]): Promise<MoodDto[]> {
+    // this is going to get HEAVY as many moods will be appended to user
+    // better to save moods to db with user id set
     const hasUser = await this.hasUser(userId);
     const moods = this.moodRepository.create(moodDtos);
     hasUser.moods = hasUser.moods.concat(moods);
@@ -61,18 +62,23 @@ export class UserService {
   }
 
   async allMoodsForUser(userId: number): Promise<MoodDto[]> {
+    // this is going to get HEAVY as many moods will be appended to user
     const hasUser = await this.hasUser(userId);
     return hasUser.moods.map((mood) =>
       plainToInstance(MoodDto, mood, { enableCircularCheck: true }),
     );
   }
 
-  async allMoodsForUserBetweenTimestamps(
+  async allMoodsForUserInRange(
     userId: number,
-    startTimestamp: string,
-    endTimestamp: string,
-  ): Promise<Mood[]> {
+    range: AllMoodsForUserQueryRangeDto,
+  ): Promise<MoodDto[]> {
     const hasUser = await this.hasUser(userId);
-    return hasUser.moods;
+    const moodsInRange = hasUser.moods.filter((mood) => {
+      return mood.timestamp >= range.start && mood.timestamp <= range.end;
+    });
+    return moodsInRange.map((mood) =>
+      plainToInstance(MoodDto, mood, { enableCircularCheck: true }),
+    );
   }
 }
