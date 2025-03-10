@@ -1,5 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { SALT_ROUNDS, userDoesNotExistError, UserService } from '../user.service';
+import {
+  SALT_ROUNDS,
+  userDoesNotExistError,
+  UserService,
+} from '../user.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from '../entities/user.entity';
 import { Repository } from 'typeorm';
@@ -9,11 +13,12 @@ import {
   oneUserDto,
   moodDtos,
   startTimestamp,
-  endTimestamp,
+  endTimestamp, queryRange, oneMoodDto,
 } from './utils';
 import { Mood } from '../entities/mood.entity';
 import { UserDto } from '../dto/user.dto';
 import * as bcrypt from 'bcrypt';
+import { MoodDto } from '../dto/mood.dto';
 
 describe('UserService', () => {
   let service: UserService;
@@ -179,20 +184,21 @@ describe('UserService', () => {
     });
   });
 
-  describe('allMoodsForUserBetweenTimestamps', () => {
-    let result: Promise<Mood[]>;
-
-    beforeEach(() => {
-      result = service.allMoodsForUserBetweenTimestamps(
+  describe('allMoodsForUserInRange', () => {
+    it('should properly call mocked findOneBy once and return expected MoodDto', async () => {
+      jest.spyOn(service, 'hasUser').mockResolvedValue(oneUser);
+      const result = await service.allMoodsForUserInRange(
         oneUser.id,
-        startTimestamp,
-        endTimestamp,
+        queryRange,
       );
+      expect(service.hasUser).toHaveBeenCalledTimes(1);
+      expect(result).toEqual([oneMoodDto]);
     });
 
-    it('should properly call mocked findOneBy once and return expected User', () => {
-      expect(mockedUserRepo.findOneBy).toHaveBeenCalledTimes(1);
-      expect(result).resolves.toEqual(oneUser.moods);
+    it('should properly call mocked findOneBy once and return expected MoodDto', () => {
+      jest.spyOn(service, 'hasUser').mockRejectedValue(userDoesNotExistError);
+      const result = service.allMoodsForUserInRange(oneUser.id, queryRange);
+      expect(result).rejects.toThrow(userDoesNotExistError);
     });
   });
 });

@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Param, Patch } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch, Query, ValidationPipe } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserDto } from './dto/user.dto';
 import { MoodDto } from './dto/mood.dto';
 import { Public } from '../auth/constants';
+import { AllMoodsForUserQueryRangeDto } from './dto/all-moods-for-user-query-range.dto';
 
 @Controller('user')
 export class UserController {
@@ -28,7 +29,14 @@ export class UserController {
   }
 
   @Get(':id/moods')
-  async allMoodsForUser(@Param('id') id: string): Promise<MoodDto[]> {
+  async allMoodsForUser(
+    @Param('id') id: string,
+    @Query(new ValidationPipe({ transform: true }))
+    range?: AllMoodsForUserQueryRangeDto,
+  ): Promise<MoodDto[]> {
+    if (range && range.start && range.end) {
+      return await this.userService.allMoodsForUserInRange(+id, range);
+    }
     return await this.userService.allMoodsForUser(+id);
   }
 }
