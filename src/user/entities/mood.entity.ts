@@ -1,7 +1,7 @@
 import {
   Column,
   CreateDateColumn,
-  Entity,
+  Entity, JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -21,14 +21,14 @@ export class Mood {
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
   })
-  createdAt: Date;
+  created_at: Date;
 
   @UpdateDateColumn({
     type: 'timestamptz',
     onUpdate: 'CURRENT_TIMESTAMP',
     nullable: true,
   })
-  updatedAt: Date;
+  updated_at: Date;
 
   @Column({ type: 'integer' })
   level: number;
@@ -37,5 +37,6 @@ export class Mood {
     orphanedRowAction: 'delete',
     onDelete: 'CASCADE',
   })
+  @JoinColumn({ name: 'user_id' })
   user: User;
 }

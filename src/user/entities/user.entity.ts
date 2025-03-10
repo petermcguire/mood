@@ -1,4 +1,11 @@
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Mood } from './mood.entity';
 
 @Entity()
@@ -9,21 +16,21 @@ export class User {
   @Column({ type: 'varchar', length: 30 })
   name: string;
 
-  @Column({ type: 'varchar', length: 30 })
+  @Column({ type: 'varchar', length: 64 })
   password: string;
 
   @CreateDateColumn({
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
   })
-  createdAt: Date;
+  created_at: Date;
 
   @UpdateDateColumn({
     type: 'timestamptz',
     onUpdate: 'CURRENT_TIMESTAMP',
     nullable: true,
   })
-  updatedAt: Date;
+  updated_at: Date;
 
   @OneToMany(() => Mood, (mood) => mood.user, { cascade: true, eager: true })
   moods: Mood[];
