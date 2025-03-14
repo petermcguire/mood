@@ -1,11 +1,14 @@
-import { IsISO8601, IsOptional } from 'class-validator';
+import { IsDate, IsOptional } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class AllMoodsForUserQueryRangeDto {
-  @IsISO8601()
+  @IsDate()
+  @Type(() => Date)
   @IsOptional()
   start: Date;
 
-  @IsISO8601()
+  @IsDate()
+  @Type(() => Date)
   @IsOptional()
   end: Date;
 }
