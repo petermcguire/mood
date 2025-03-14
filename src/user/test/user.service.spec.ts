@@ -195,7 +195,7 @@ describe('UserService', () => {
       expect(result).toEqual([oneMoodDto]);
     });
 
-    it('should properly call mocked findOneBy once and return expected MoodDto', () => {
+    it('should properly fail if user does not exist', () => {
       jest.spyOn(service, 'hasUser').mockRejectedValue(userDoesNotExistError);
       const result = service.allMoodsForUserInRange(oneUser.id, queryRange);
       expect(result).rejects.toThrow(userDoesNotExistError);
